@@ -23,8 +23,9 @@ int main(){
     std::vector<int> steps(NUM_STEPS);
     std::iota(steps.begin(), steps.end(), 1);
     
-    auto stock_1 = Stock("SNEED", drift, volatility, price); 
-    auto stock_2 = Stock("CHUCK", drift*0.1, volatility*1.05, price*10);
+    Market market = Market{};
+    market.add_stock("SNEED", drift, volatility, price);
+    market.add_stock("CHUCK", drift*0.1, volatility*1.05, price*10);
 
     std::vector<float> prices_1;
     std::vector<float> prices_2;
@@ -33,17 +34,16 @@ int main(){
     prices_2.reserve(steps.size());
 
     for (auto const & _ : steps){
-        float p1 = stock_1.price(timestep);
-        float p2 = stock_2.price(timestep);
-        prices_1.push_back(p1);
-        prices_2.push_back(p2);
+        auto prices = market.get_prices(timestep);
+        prices_1.push_back(prices[0]);
+        prices_2.push_back(prices[1]);
     }
     const auto & s = steps;
     plt::hold(plt::on);
     auto plt1 = plt::plot(prices_1, "r");
-    plt1->display_name(stock_1.ticker);
+    plt1->display_name("SNEED");
     auto plt2 = plt::plot(prices_2, "b");
-    plt2->display_name(stock_2.ticker);
+    plt2->display_name("CHUCK");
     plt::legend();
     plt::title("Market");
     plt::xlabel("Time");

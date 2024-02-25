@@ -1,13 +1,8 @@
-#include<chrono>
 #include<memory>
 #include<vector>
 
-#include "stochastic.h"
 #include "market.h"
 
-float Stock::price(float timestep){
-    return price_process->next(timestep);
-}
 
 float Market::get_price(std::string ticker, float timestep){
     auto stock = tickermap.find(ticker);

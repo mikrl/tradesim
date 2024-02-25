@@ -4,7 +4,6 @@
 #include<string>
 #include<unordered_map>
 
-#include "stochastic.h"
 #include "stock.h"
 
 class Market {
@@ -14,9 +13,10 @@ class Market {
     std::unordered_map<std::string, std::shared_ptr<Stock>> tickermap;
 
     public:
+    std::vector<std::string> get_tickers();
     std::vector<float> get_prices(float timestep);
-    float get_price(std::string ticker, float timestep);
-    void add_stock(std::string ticker);
-    void add_stock(std::string ticker, float drift, float volatility, float init_price);
+    float get_price(const std::string &ticker, float timestep);
+    void add_stock(const std::string &ticker);
+    void add_stock(const std::string &ticker, float drift, float volatility, float init_price);
 
 };

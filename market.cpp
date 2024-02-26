@@ -19,11 +19,11 @@ float Market::get_price(const std::string &t, float ts){
     return price;
 }
 
-std::vector<float> Market::get_prices(float ts){
-    std::vector<float> prices;
-    prices.reserve(stock_market.size());
+std::unique_ptr<std::unordered_map<std::string, float>> Market::get_prices(float ts){
+    auto prices = std::make_unique<std::unordered_map<std::string, float>> ();
+    prices->reserve(stock_market.size());
     for (auto & stock : stock_market){
-        prices.push_back(stock->price(ts));
+        prices->insert({stock->ticker, stock->price(ts)});
     }
     return prices;
 }

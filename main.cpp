@@ -40,8 +40,8 @@ int main(){
 
     for (auto const & _ : steps){
         auto prices = market.get_prices(timestep);
-        prices_1.push_back(prices[0]);
-        prices_2.push_back(prices[1]);
+        prices_1.push_back(prices->at("SNEED"));
+        prices_2.push_back(prices->at("CHUCK"));
         bank.push_back(bank_acc.get_balance());
         bank_acc.apply_interest(timestep);
     }

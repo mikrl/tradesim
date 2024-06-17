@@ -37,3 +37,8 @@ void Market::add_stock(const std::string &t, float d, float v, float ip){
 void Market::add_stock(const std::string &t){
     add_stock(t, 0.5, 0.1, 1.0);
 }
+
+void Market::update_stock(const std::string &t, float d, float v, float p){
+    auto stock = tickermap.find(t);
+    stock->second->update(d, v, p);
+}

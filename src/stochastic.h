@@ -15,5 +15,6 @@ class stochastic_process {
         stochastic_process(const stochastic_process& sp) {current_value = sp.current_value; drift = sp.drift; volatility = sp.volatility;}
         float get_current_value();
         float next(float timestep);
-        std::shared_ptr<std::vector<float>> get_n(float timestep, int n);
+        std::shared_ptr<std::vector<float>> next_n(float timestep, int n);
+        void update(float d, float v, float cv);
 };     

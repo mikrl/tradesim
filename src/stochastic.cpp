@@ -20,11 +20,17 @@ float stochastic_process::next(float timestep){
     return current_value;
 }
 
-std::shared_ptr<std::vector<float>> stochastic_process::get_n(float timestep, int n){
+std::shared_ptr<std::vector<float>> stochastic_process::next_n(float timestep, int n){
     window->reserve(n);
     for (int i=0; i<n; i++){
         auto next = this->next(timestep);
         window->push_back(next);
     }
     return window;
+}
+
+void stochastic_process::update(float d, float v, float cv){
+    drift = d;
+    volatility = v;
+    current_value = cv;
 }

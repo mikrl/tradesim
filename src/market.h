@@ -9,7 +9,6 @@
 class Market {
 
     std::vector<std::shared_ptr<Stock>> stock_market;
-    float interest_rate;
     std::unordered_map<std::string, std::shared_ptr<Stock>> tickermap;
 
     public:
@@ -18,5 +17,6 @@ class Market {
     float get_price(const std::string &ticker, float timestep);
     void add_stock(const std::string &ticker);
     void add_stock(const std::string &ticker, float drift, float volatility, float init_price);
+    void update_stock(const std::string &ticker, float drift, float volatility, float price);
 
 };

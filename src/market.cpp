@@ -28,6 +28,23 @@ std::unique_ptr<std::unordered_map<std::string, float>> Market::get_prices(float
     return prices;
 }
 
+std::unique_ptr<std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>> Market::get_n_prices(int n, float ts){
+    auto prices = std::unique_ptr<
+                    std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>>
+                    (new std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>());
+    
+    prices->reserve(stock_market.size());
+    for (auto & stock : stock_market){
+        auto price_data = std::make_unique<std::vector<float>>();
+        price_data->reserve(n);
+        for (int i = 0; i < n; i++){
+            price_data->push_back(stock->price(ts));
+        }
+        prices->insert({stock->ticker, std::move(price_data)});
+    }
+    return prices;
+}
+
 void Market::add_stock(const std::string &t, float d, float v, float ip){
     auto new_stock = std::make_shared<Stock>(t, d, v, ip);
     tickermap.insert({t, new_stock});

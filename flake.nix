@@ -13,11 +13,15 @@
     defaultPackage.${system} = pkgs.stdenv.mkDerivation {
       name = "tradesim";
       src = self;
-      buildInputs = [ pkgs.boost pkgs.cmake ];
+      buildInputs = [ pkgs.boost pkgs.cmake pkgs.clang ];
+
+      CC="${pkgs.clang}/bin/clang";
+      CXX="${pkgs.clang}/bin/clang++";
+
       configurePhase = ''
         mkdir build
         cd build
-        cmake ..
+        cmake -DCMAKE_BUILD_TYPE=DEBUG ..
       '';
       buildPhase = ''
         make

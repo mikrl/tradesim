@@ -23,6 +23,7 @@ class TradingDay {
     public:
   
     TradingDay() = delete;
+    TradingDay(const TradingDay &td) : daily_data(td.daily_data), hourly_data(std::make_unique<std::vector<OHLCData>>(*td.hourly_data)), trades_per_minute(td.trades_per_minute){}
     TradingDay(std::vector<float> ph, float tpm) : trades_per_minute(tpm), daily_data(_generate_OHLC_from_price_history(ph)), hourly_data(_generate_hourly_data(ph)) {}
     TradingDay(OHLCData dd, std::unique_ptr<std::vector<OHLCData>> hd, float tpm) : daily_data(dd), hourly_data(std::move(hd)), trades_per_minute(tpm){}
     

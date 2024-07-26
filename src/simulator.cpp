@@ -42,7 +42,8 @@ std::unique_ptr<std::unordered_map<std::string, TradingDay>> SimpleMultiStockSim
         auto & prices = *price_data->second;
 
         TradingDay trading_day = TradingDay(prices, config.trades_per_minute);
-        _this_trading_day.emplace(stock, trading_day);
+        std::pair<std::string, TradingDay> trading_day_pair = {stock, trading_day};
+        _this_trading_day.insert(trading_day_pair);
     }
 
     trading_day_data->push_back(_this_trading_day);

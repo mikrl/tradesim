@@ -13,23 +13,21 @@
     defaultPackage.${system} = pkgs.stdenv.mkDerivation {
       name = "tradesim";
       src = self;
-      buildInputs = [ pkgs.boost pkgs.cmake pkgs.clang ];
-
-      CC="${pkgs.clang}/bin/clang";
-      CXX="${pkgs.clang}/bin/clang++";
-
-      configurePhase = ''
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=DEBUG ..
-      '';
-      buildPhase = ''
-        make
-      '';
+      dontStrip = true;
+      buildInputs = with pkgs; [ boost cmake clang lldb clang-tools gtest gcc libcxx ];
+      nativeBuildInputs = with pkgs; [ cmake ];
+      #cmakeFlags = [ "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" ];
       installPhase = ''
         mkdir -p $out/bin
         cp tradesim $out/bin/
       '';
+      shellHook = ''
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.libcxx}/lib
+      '';
+
+    };
+    devShell.${system} = pkgs.mkShell {
+      buildInputs = [ pkgs.lldb pkgs.libcxx ];
     };
   };
 }

@@ -5,7 +5,9 @@ project(tradesim)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Boost COMPONENTS REQUIRED)
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 
-add_executable(tradesim src/main.cpp src/stochastic.cpp src/market.cpp src/stock.cpp src/bank.cpp src/simulator.cpp src/trading_day.cpp)
-#target_link_libraries(tradesim PUBLIC matplot)
+find_package(Boost REQUIRED)
+
+add_subdirectory(src)

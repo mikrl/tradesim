@@ -19,8 +19,8 @@ float Market::get_price(const std::string &t, float ts){
     return price;
 }
 
-std::unique_ptr<std::unordered_map<std::string, float>> Market::get_prices(float ts){
-    auto prices = std::make_unique<std::unordered_map<std::string, float>> ();
+std::unique_ptr<PriceMap> Market::get_prices(float ts){
+    auto prices = std::make_unique<PriceMap>();
     prices->reserve(stock_market.size());
     for (auto & stock : stock_market){
         prices->insert({stock->ticker, stock->price(ts)});
@@ -28,20 +28,30 @@ std::unique_ptr<std::unordered_map<std::string, float>> Market::get_prices(float
     return prices;
 }
 
-std::unique_ptr<std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>> Market::get_n_prices(int n, float ts){
-    auto prices = std::unique_ptr<
-                    std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>>
-                    (new std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>());
-    
+std::unique_ptr<nPriceMap> Market::get_next_n_prices(int n, float ts){
+    /*
+    For every entry in the get_prices map, we want to add it to prices, the nPriceMap.
+    Essentially, for every stock that we received prices for, append it to the vector in prices it is keyed on, n times.
+    */
+    auto prices = std::unique_ptr<nPriceMap>(new nPriceMap());
+
     prices->reserve(stock_market.size());
-    for (auto & stock : stock_market){
-        auto price_data = std::make_unique<std::vector<float>>();
-        price_data->reserve(n);
-        for (int i = 0; i < n; i++){
-            price_data->push_back(stock->price(ts));
-        }
-        prices->insert({stock->ticker, std::move(price_data)});
+
+
+    for (auto & stock : get_tickers()){
+        auto vec = std::make_unique<std::vector<float>>();
+        vec->reserve(n);
+        prices->emplace(stock, std::move(vec));
     }
+    
+    for (int i = 0; i < n; i++){
+        auto price_map = get_prices(ts);
+        for (auto & stock : get_tickers()){
+            auto stock_price = price_map->at(stock);
+            prices->at(stock)->push_back(stock_price);
+        }
+    }
+    
     return prices;
 }
 

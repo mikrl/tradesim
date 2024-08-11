@@ -6,10 +6,10 @@
 #include <boost/range/combine.hpp>
 // #include<matplot/matplot.h>
 
-#include "bank.h"
-#include "market.h"
+//#include "bank.h"
+//#include "market.h"
 #include "simulator.h"
-#include "stochastic.h"
+//#include "stochastic.h"
 
 // namespace plt = matplot;
 

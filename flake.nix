@@ -17,6 +17,12 @@
       buildInputs = with pkgs; [ boost cmake clang lldb clang-tools gtest gcc libcxx ];
       nativeBuildInputs = with pkgs; [ cmake ];
       #cmakeFlags = [ "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" ];
+      buildPhase = ''
+        mkdir build
+        cd build
+        cmake ..
+        make
+      '';
       installPhase = ''
         mkdir -p $out/bin
         cp tradesim $out/bin/

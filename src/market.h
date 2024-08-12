@@ -8,7 +8,7 @@
 
 using PriceMap = std::unordered_map<std::string, float>;
 /* Don't be smart, rewrite nPriceMap to just map a string to a vector*/
-using nPriceMap = std::unordered_map<std::string, std::unique_ptr<std::vector<float>>>; 
+using nPriceMap = std::unordered_map<std::string, std::vector<float>>; 
 
 class Market {
 

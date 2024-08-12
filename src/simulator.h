@@ -10,53 +10,83 @@
 
 
 
-struct SimulatorConfig{
-    int trading_days;
-    int trades_per_minute;
+
+
+struct StaticMarketInfo {
+    float hours_per_trading_day;
+    float total_volume;
 };
 
-struct MarketTiming {
-    float hours_per_trading_day;
-    float minutes_per_trading_day;
-    float total_trades_per_day;
-    float time_between_trades;
+struct ScenarioConfig {
+    struct StaticMarketInfo market_configuration;
+    int trading_days;
+};
+
+struct StockTrades{
+    std::string ticker;
+    TradingDay trades;
 };
 
 class StockMarketSimulation{
     protected:
     int trading_day = 0;
+    const int trading_days;
     std::unique_ptr<Market> market;
-    std::shared_ptr<std::vector<std::unordered_map<std::string, TradingDay>>> trading_day_data;
 
     public:
-    SimulatorConfig config;
     
-    StockMarketSimulation(int trading_days, int trades_per_minute) : config({trading_days, trades_per_minute}) , market(std::make_unique<Market>()){}
-    StockMarketSimulation(int trading_days, int trades_per_minute, std::unique_ptr<Market> market) : config({trading_days, trades_per_minute}), market(std::move(market)){}
-    StockMarketSimulation(int trading_days, int trades_per_minute, int num_stocks) : StockMarketSimulation(trading_days, trades_per_minute){
+    StockMarketSimulation(const int trading_days) : trading_days(trading_days), market(std::make_unique<Market>()){}
+    StockMarketSimulation(const int trading_days, std::unique_ptr<Market> market) : trading_days(trading_days), market(std::move(market)){}
+    StockMarketSimulation(int trading_days, int num_stocks) : StockMarketSimulation(trading_days){
         for (int i = 0; i < num_stocks; i++){
             market->add_stock("STOCK_" + std::to_string(i));
         }
     }
-    StockMarketSimulation(int trading_days, int trades_per_minute, std::vector<std::string> tickers) : StockMarketSimulation(trading_days, trades_per_minute){
+    StockMarketSimulation(int trading_days, std::vector<std::string> tickers) : StockMarketSimulation(trading_days){
         for (auto & ticker : tickers){
             market->add_stock(ticker);
         }
     }
 
-    MarketTiming get_timing_config();
+    std::vector<std::string> get_tickers(){
+        return market->get_tickers();
+    }
 
     void run();
-    virtual std::unique_ptr<std::unordered_map<std::string, TradingDay>> advance() = 0;
+    virtual void handle(std::vector<StockTrades> &todays_data) = 0;
+    virtual std::vector<StockTrades> advance() = 0;
 };
 
-class SimpleMultiStockSimulation : public StockMarketSimulation{
+class SimpleTimeBarDailySimulation : public StockMarketSimulation{
     /*
     Runs a simulation for a number of trading days with a fixed number of trades per minute.
     Generates a price history for each stock in the market in one operation.
-    Outputs a mappikng of stock tickers to price histories represented as vectors of OHLC data.
+    Outputs a mapping of stock tickers to price histories represented as vectors of OHLC data.
     */
+    private:
+    /* All member variables apply to every stock in the same way, eg volume, trades per minute etc*/
+    const long int volume;
+    float timestep;
+    float HOURS_PER_TRADING_DAY = 6.5;
+    int SECONDS_PER_TRADING_DAY = int(HOURS_PER_TRADING_DAY * 3600.0);
+
+    std::unordered_map<std::string, std::vector<OHLCData>> trading_day_data;
+
     public:
     using StockMarketSimulation::StockMarketSimulation;
-    std::unique_ptr<std::unordered_map<std::string, TradingDay>> advance() override;
+
+    SimpleTimeBarDailySimulation(int trading_days, int volume, int num_stocks) : StockMarketSimulation(trading_days, num_stocks), volume(volume) {
+        float avg_trades_per_second = float(volume) / float(SECONDS_PER_TRADING_DAY);
+        timestep = float(SECONDS_PER_TRADING_DAY) / float(volume);
+        for (auto & ticker : get_tickers()){
+            auto time_bar_data = std::vector<OHLCData>();
+            time_bar_data.reserve(trading_days);
+            trading_day_data.insert({ticker, time_bar_data});
+        }
+    }
+
+    SimpleTimeBarDailySimulation(int trading_days, int volume) : SimpleTimeBarDailySimulation(trading_days, volume, 1){}
+    
+    void handle(std::vector<StockTrades> &todays_data) override;
+    std::vector<StockTrades> advance() override;
 };

@@ -39,16 +39,16 @@ std::unique_ptr<nPriceMap> Market::get_next_n_prices(int n, float ts){
 
 
     for (auto & stock : get_tickers()){
-        auto vec = std::make_unique<std::vector<float>>();
-        vec->reserve(n);
-        prices->emplace(stock, std::move(vec));
+        auto vec = std::vector<float>();
+        vec.reserve(n);
+        prices->insert({stock, vec});
     }
     
     for (int i = 0; i < n; i++){
         auto price_map = get_prices(ts);
         for (auto & stock : get_tickers()){
             auto stock_price = price_map->at(stock);
-            prices->at(stock)->push_back(stock_price);
+            prices->at(stock).push_back(stock_price);
         }
     }
     
@@ -62,7 +62,7 @@ void Market::add_stock(const std::string &t, float d, float v, float ip){
 }
 
 void Market::add_stock(const std::string &t){
-    add_stock(t, 0.5, 0.1, 1.0);
+    add_stock(t, 0.00, 0.01, 30.0);
 }
 
 void Market::update_stock(const std::string &t, float d, float v, float p){

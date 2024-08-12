@@ -8,26 +8,27 @@ struct OHLCData{
     float close;
     float high;
     float low;
+    long int volume;
 };
+struct Transaction{
+    float price;
+    long int volume;
+};
+
 
 class TradingDay {
     
-    
-    float trades_per_minute;
-    OHLCData daily_data;
-    std::unique_ptr<std::vector<OHLCData>> hourly_data;
-
-    OHLCData _generate_OHLC_from_price_history(const std::vector<float> &ph);
-    std::unique_ptr<std::vector<OHLCData>> _generate_hourly_data(const std::vector<float> &ph);
+    private:
+    long int total_volume;
+    std::vector<Transaction> transaction_ledger;
 
     public:
   
-    TradingDay() = delete;
-    TradingDay(const TradingDay &td) : daily_data(td.daily_data), hourly_data(std::make_unique<std::vector<OHLCData>>(*td.hourly_data)), trades_per_minute(td.trades_per_minute){}
-    TradingDay(std::vector<float> ph, float tpm) : trades_per_minute(tpm), daily_data(_generate_OHLC_from_price_history(ph)), hourly_data(_generate_hourly_data(ph)) {}
-    TradingDay(OHLCData dd, std::unique_ptr<std::vector<OHLCData>> hd, float tpm) : daily_data(dd), hourly_data(std::move(hd)), trades_per_minute(tpm){}
+    TradingDay();
+    TradingDay(std::vector<Transaction> transactions) : transaction_ledger(transactions) {}
     
+    void add_transaction(float price, long int volume = 1);
+    std::vector<Transaction> get_transactions() const;
     OHLCData get_daily_data() const;
     std::vector<OHLCData> get_hourly_data() const;
-
 };

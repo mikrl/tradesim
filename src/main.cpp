@@ -26,10 +26,10 @@ void save_to_file(std::vector<float> & x_data, std::vector<float> & y_data, std:
 
 int main(){
     int trading_days = 1;
-    int trades_per_minute = 10;
+    int daily_volume_per_stock = 10000;
     int num_stocks = 3;
 
-    auto sim = SimpleMultiStockSimulation(trading_days, trades_per_minute, num_stocks);
+    auto sim = SimpleTimeBarDailySimulation(trading_days, daily_volume_per_stock, num_stocks);
     sim.run();
 
     return 0;

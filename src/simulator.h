@@ -89,4 +89,5 @@ class SimpleTimeBarDailySimulation : public StockMarketSimulation{
     
     void handle(std::vector<StockTrades> &todays_data) override;
     std::vector<StockTrades> advance() override;
+    void print();
 };

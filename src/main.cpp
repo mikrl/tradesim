@@ -24,13 +24,18 @@ void save_to_file(std::vector<float> & x_data, std::vector<float> & y_data, std:
     file.close();
 }
 
-int main(){
-    int trading_days = 1;
-    int daily_volume_per_stock = 10000;
-    int num_stocks = 3;
+int main(int argc, char *argv[]){
+    // Read trading days, daily volume per stock and num stocks from stdin
+    int trading_days, daily_volume_per_stock, num_stocks;
+
+    trading_days = atoi(argv[1]);
+    daily_volume_per_stock = atoi(argv[2]);
+    num_stocks = atoi(argv[3]);
+    
 
     auto sim = SimpleTimeBarDailySimulation(trading_days, daily_volume_per_stock, num_stocks);
     sim.run();
+    sim.print();
 
     return 0;
 }

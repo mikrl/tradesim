@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,7 +10,9 @@
 
 
 void StockMarketSimulation::run(){
+    std::cerr << "Running simulation for " << trading_days << " trading days." << std::endl;
     for (; trading_day < trading_days; trading_day++){
+        std::cerr << "Day " << trading_day << std::endl;
         auto todays_data = advance();
         handle(todays_data);
     }
@@ -47,5 +50,14 @@ void SimpleTimeBarDailySimulation::handle(std::vector<StockTrades> &todays_data)
         trading_day_data.at(ticker).push_back(daily_bar);
     }
 
+}
+
+void SimpleTimeBarDailySimulation::print() {
+    for (auto & [ticker, daily_data] : trading_day_data){
+        std::cout << "Ticker: " << ticker << std::endl;
+        for (auto & data : daily_data){
+            std::cout << "Open: " << data.open << " Close: " << data.close << " High: " << data.high << " Low: " << data.low << " Volume: " << data.volume << std::endl;
+        }
+    }
 }
 

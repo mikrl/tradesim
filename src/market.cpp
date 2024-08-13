@@ -62,7 +62,9 @@ void Market::add_stock(const std::string &t, float d, float v, float ip){
 }
 
 void Market::add_stock(const std::string &t){
-    add_stock(t, 0.00, 0.01, 30.0);
+    // Since we are not given any parameters, we can just call the other add_stock function with default parameters.
+    // Choosing the volatility to be 1% per day, averaged over each second
+    add_stock(t, 0.1/86400, 10.0/86400, 30.0);
 }
 
 void Market::update_stock(const std::string &t, float d, float v, float p){

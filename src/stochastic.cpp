@@ -34,3 +34,15 @@ void stochastic_process::update(float d, float v, float cv){
     volatility = v;
     current_value = cv;
 }
+
+float stock_process::next(float timestep) {
+    if (hit_zero){
+        return 0.0f;
+    }
+    auto current_value = stochastic_process::next(timestep);
+    if (current_value <= 0.0f){
+        hit_zero = true;
+        current_value = 0.0f;
+    }
+    return std::max(0.0f, current_value);
+}

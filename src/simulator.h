@@ -57,7 +57,7 @@ class StockMarketSimulation{
     virtual std::vector<StockTrades> advance() = 0;
 };
 
-class SimpleTimeBarDailySimulation : public StockMarketSimulation{
+class SimpleDailyStockSimulation : public StockMarketSimulation{
     /*
     Runs a simulation for a number of trading days with a fixed number of trades per minute.
     Generates a price history for each stock in the market in one operation.
@@ -70,12 +70,14 @@ class SimpleTimeBarDailySimulation : public StockMarketSimulation{
     float HOURS_PER_TRADING_DAY = 6.5;
     int SECONDS_PER_TRADING_DAY = int(HOURS_PER_TRADING_DAY * 3600.0);
 
+
+    protected:
     std::unordered_map<std::string, std::vector<OHLCData>> trading_day_data;
 
     public:
     using StockMarketSimulation::StockMarketSimulation;
 
-    SimpleTimeBarDailySimulation(int trading_days, int volume, int num_stocks) : StockMarketSimulation(trading_days, num_stocks), volume(volume) {
+    SimpleDailyStockSimulation(int trading_days, int volume, int num_stocks) : StockMarketSimulation(trading_days, num_stocks), volume(volume) {
         float avg_trades_per_second = float(volume) / float(SECONDS_PER_TRADING_DAY);
         timestep = float(SECONDS_PER_TRADING_DAY) / float(volume);
         for (auto & ticker : get_tickers()){
@@ -85,9 +87,23 @@ class SimpleTimeBarDailySimulation : public StockMarketSimulation{
         }
     }
 
-    SimpleTimeBarDailySimulation(int trading_days, int volume) : SimpleTimeBarDailySimulation(trading_days, volume, 1){}
-    
-    void handle(std::vector<StockTrades> &todays_data) override;
+    SimpleDailyStockSimulation(int trading_days, int volume) : SimpleDailyStockSimulation(trading_days, volume, 1){}
     std::vector<StockTrades> advance() override;
-    void print();
+    virtual void const print() const = 0;
+};
+
+class SimpleTimeBarDailySimulation : public SimpleDailyStockSimulation{
+    public:
+        SimpleTimeBarDailySimulation(int trading_days, int volume, int num_stocks) : SimpleDailyStockSimulation(trading_days, volume, num_stocks){}
+        void handle(std::vector<StockTrades> &todays_data) override;
+        void const print() const override;
+};
+
+class SimpleTickBarDailySimulation : public SimpleDailyStockSimulation{
+    void handle(std::vector<StockTrades> &todays_data) override;
+
+};
+
+class SimpleVolumeBarDailySimulation : public SimpleDailyStockSimulation{
+    void handle(std::vector<StockTrades> &todays_data) override;    
 };

@@ -2,4 +2,7 @@
 A simple stock market simulator.
 
 ## Building
-`docker build --tag tradesim .`
+`mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make`
+
+## Running
+`build/ & ./tradesim [num days] [total volume] [num stocks]` 

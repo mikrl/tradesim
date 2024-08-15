@@ -33,10 +33,11 @@ TradingDay::TradingDay(){
     transaction_ledger = std::vector<Transaction>();
 }
 
-void TradingDay::add_transaction(float price, long int volume){
+void TradingDay::add_transaction(float price, long int volume, std::chrono::time_point<std::chrono::system_clock> timestamp){
     /* Adds a transaction to the trading day.*/
-    transaction_ledger.push_back({price, volume});
+    transaction_ledger.push_back({price, volume, tick, timestamp});
     total_volume += volume;
+    tick++;
 }
 
 std::vector<Transaction> TradingDay::get_transactions() const{

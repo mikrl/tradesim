@@ -88,6 +88,12 @@ class SimpleDailyStockSimulation : public StockMarketSimulation{
     }
 
     SimpleDailyStockSimulation(int trading_days, int volume) : SimpleDailyStockSimulation(trading_days, volume, 1){}
+
+    const std::unordered_map<std::string, std::vector<OHLCData>> get_data() const{
+        return trading_day_data;
+    }
+
+
     std::vector<StockTrades> advance() override;
     virtual void const print() const = 0;
 };

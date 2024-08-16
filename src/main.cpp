@@ -7,11 +7,8 @@
 // #include<matplot/matplot.h>
 
 //#include "bank.h"
-//#include "market.h"
+#include "output.h"
 #include "simulator.h"
-//#include "stochastic.h"
-
-// namespace plt = matplot;
 
 void save_to_file(std::vector<float> & x_data, std::vector<float> & y_data, std::string filename){
     
@@ -36,6 +33,14 @@ int main(int argc, char *argv[]){
     auto sim = SimpleTimeBarDailySimulation(trading_days, daily_volume_per_stock, num_stocks);
     sim.run();
     sim.print();
+    auto datafiles = format_as_gnuplot(sim.get_data());
+    std::vector<std::string> outfiles = save(datafiles);
+    
+    std::cout << "Saved to: " << std::endl; 
+    for (auto & file : outfiles){
+        std::cout << file << std::endl;
+    }
+    std::cout << std::endl;
 
     return 0;
 }

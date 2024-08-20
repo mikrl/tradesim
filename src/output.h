@@ -1,14 +1,14 @@
 #pragma once
 
-#include <fstream>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 
 #include "trading_day.h"
 
 void const print(std::unordered_map<std::string, std::vector<OHLCData>> trading_day_data);
-std::vector<std::ofstream> const format_as_gnuplot(std::unordered_map<std::string, std::vector<OHLCData>> trading_day_data);
+std::vector<std::stringstream> const format_as_gnuplot(std::unordered_map<std::string, std::vector<OHLCData>> trading_day_data);
 
-void const save(std::ofstream &file, std::string filename);
-std::string const save(std::ofstream &file);
-std::vector<std::string> const save(std::vector<std::ofstream> &files);
+void const save(std::stringstream &file, std::string filename);
+std::string const save(std::stringstream &file);
+std::vector<std::string> const save(std::vector<std::stringstream> &files);

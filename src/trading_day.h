@@ -4,6 +4,7 @@
 #include <vector>
 
 struct OHLCData{
+    std::chrono::time_point<std::chrono::system_clock> timestamp;
     float open;
     float close;
     float high;

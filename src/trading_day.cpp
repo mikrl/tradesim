@@ -25,7 +25,7 @@ OHLCData TradingDay::get_daily_data() const{
         volume += transaction.volume;
     }
     
-    return {open, close, high, low , volume};
+    return {timestamp, open, close, high, low , volume};
 }
 
 TradingDay::TradingDay(){

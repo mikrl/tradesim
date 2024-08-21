@@ -13,3 +13,5 @@ std::vector<std::stringstream> const format_as_gnuplot(std::unordered_map<std::s
 void const save(std::stringstream &file, std::string filename);
 std::string const save(std::stringstream &file);
 std::vector<std::string> const save(std::vector<std::stringstream> &files);
+
+void const plot(std::vector<std::string> &files);

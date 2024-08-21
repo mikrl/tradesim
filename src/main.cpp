@@ -40,6 +40,7 @@ int main(int argc, char *argv[]){
     for (auto & file : outfiles){
         std::cout << file << std::endl;
     }
+    plot(outfiles);
     std::cout << std::endl;
 
     return 0;

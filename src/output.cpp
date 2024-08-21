@@ -70,3 +70,14 @@ std::vector<std::string> const save(std::vector<std::stringstream> &files){
     }
     return output;
 }
+
+void const plot(std::vector<std::string> &files){
+    std::string command = "gnuplot -p -e \"";
+    command += "plot ";
+    for (auto & file : files){
+        command += "'" + file + "' using 1:2:3:4:5 with candlesticks, ";
+    }
+    command = command.substr(0, command.size() - 2); // remove the last 3 characters
+    command += "\"";
+    system(command.c_str());
+}

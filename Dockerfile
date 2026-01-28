@@ -1,17 +1,19 @@
+FROM nixos/nix:latest AS build
+
+ENV NIX_CONFIG="experimental-features = nix-command flakes"
+WORKDIR /app
+COPY . .
+RUN nix build .#defaultPackage.x86_64-linux
+
 FROM nixos/nix:latest
 
-RUN nix-channel --update
-# Set the working directory in the container to /app
+ENV NIX_CONFIG="experimental-features = nix-command flakes"
+RUN nix profile install nixpkgs#gnuplot
+ENV PATH="/root/.nix-profile/bin:${PATH}"
+ENV GNUTERM=dumb
+
 WORKDIR /app
+COPY --from=build /app/result /app/result
 
-# Copy the current directory contents into the container at /app
-ADD . /app
-
-# Make port 80 available to the world outside this container
-EXPOSE 31337
-
-# Run cmake . && make when the container launches
-RUN nix-build
-
-# Run the output program from the previous step
-ENTRYPOINT ["/bin/sh"]
+ENTRYPOINT ["/app/result/bin/tradesim"]
+CMD ["10","100","1"]

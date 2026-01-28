@@ -1,6 +1,13 @@
 # Tradesim
 A simple stock market simulator.
 
+## Dependencies
+- CMake 3.10+
+- A C++20 compiler (project currently sets `clang++` in `CMakeLists.txt`)
+- Boost headers (uses `boost/range/combine.hpp`)
+- gnuplot (used at runtime by `plot()` to render candlesticks)
+- A Unix-like environment (uses `mkstemp` for temporary files)
+
 ## Building
 `mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make`
 
@@ -31,5 +38,18 @@ Open: 35.4709 Close: 35.2721 High: 35.9522 Low: 35.0006 Volume: 100
 Open: 35.2954 Close: 34.8599 High: 35.6496 Low: 34.8338 Volume: 100
 Open: 34.8303 Close: 35.3745 High: 35.3745 Low: 34.528 Volume: 100
 Open: 35.3569 Close: 36.7404 High: 36.9984 Low: 35.3285 Volume: 100
-                                                                                                                                                
+                                                                                                                                              
+```
+
+## Docker
+### CMake build
+```
+docker build -f Dockerfile.cmake -t tradesim:cmake .
+docker run --rm tradesim:cmake 10 100 1
+```
+
+### Nix build (experimental)
+```
+docker build -f Dockerfile -t tradesim:nix .
+docker run --rm tradesim:nix 10 100 1
 ```
